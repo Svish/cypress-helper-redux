@@ -15,7 +15,7 @@ export default (callback: ReduxActionsCallback): void => {
         consoleProps: () => ({
           type: action.type,
           payload: 'payload' in action ? action.payload : undefined,
-          raw: action,
+          action,
         }),
       });
     }

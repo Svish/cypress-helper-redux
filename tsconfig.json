@@ -5,6 +5,7 @@
     "lib": ["es6", "dom"],
     "types": ["cypress"],
     "outDir": "dist",
+    "declaration": true,
     "strict": true
   },
   "include": ["src"]

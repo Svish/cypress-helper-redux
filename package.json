@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "prepare": "tsc",
-    "watch": "tsc --watch --preserveWatchOutput",
+    "watch": "tsc --watch --preserveWatchOutput --listEmittedFiles",
     "lint:ts": "tsc --noEmit",
     "lint:prettier": "prettier --ignore-path .gitignore --check \"**/*\"",
     "release": "release-it"
@@ -37,7 +37,7 @@
     "url": "https://github.com/svish/cypress-helper-redux"
   },
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/globals.d.ts",
   "files": [
     "dist"
   ],

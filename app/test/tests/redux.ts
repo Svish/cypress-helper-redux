@@ -11,6 +11,7 @@ describe('Cypress Redux helper', () => {
         const { items } = store.getState();
         expect(items.items).to.have.lengthOf(2);
       });
+      cy.get('li').should('have.length', 2);
     });
   });
 
@@ -20,6 +21,7 @@ describe('Cypress Redux helper', () => {
         type: 'items/add-item',
         payload: 'from cypress',
       }));
+      cy.get('li').should('have.length', 3);
     });
   });
 });

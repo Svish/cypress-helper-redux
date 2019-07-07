@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": "../node_modules",
     "isolatedModules": false,
-    "types": ["cypress", "mocha", "cypress-helper-redux"]
+    "types": ["cypress", "mocha"]
   },
   "include": ["**/*"]
 }

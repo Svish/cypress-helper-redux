@@ -1,0 +1,39 @@
+{
+  "name": "redux-app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "start-server-and-test start:app http-get://localhost:3000 start:cypress",
+    "start:app": "react-scripts start",
+    "start:cypress": "cypress open --project ./test",
+    "build": "react-scripts build"
+  },
+  "dependencies": {
+    "@types/node": "12.0.12",
+    "@types/react": "16.8.23",
+    "@types/react-dom": "16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0",
+    "typesafe-actions": "^4.4.2",
+    "typescript": "3.5.2"
+  },
+  "devDependencies": {
+    "@cypress/webpack-preprocessor": "^4.1.0",
+    "@types/mocha": "^5.2.7",
+    "@types/react-redux": "^7.1.1",
+    "cypress": "^3.3.2",
+    "cypress-helper-redux": "file:../",
+    "serve": "^11.0.2",
+    "start-server-and-test": "^1.9.1",
+    "ts-loader": "^6.0.4",
+    "webpack": "4.29.6"
+  },
+  "browserslist": [
+    "last 1 chrome version"
+  ]
+}

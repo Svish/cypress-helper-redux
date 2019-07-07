@@ -1,0 +1,55 @@
+{
+  "name": "cypress-helper-redux",
+  "version": "0.0.1",
+  "description": "Cypress commands for manipulating Redux in tests",
+  "keywords": [
+    "cypress",
+    "helper",
+    "redux",
+    "typescript"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "prepare": "tsc",
+    "watch": "tsc --watch --preserveWatchOutput",
+    "lint:ts": "tsc --noEmit",
+    "lint:prettier": "prettier --ignore-path .gitignore --check \"**/*\"",
+    "release": "release-it"
+  },
+  "release-it": {
+    "git": {
+      "tagName": "v%s",
+      "commitArgs": "--gpg-sign",
+      "tagArgs": "--sign"
+    },
+    "github": {
+      "release": true
+    },
+    "hooks": {
+      "before:init": [
+        "npm test"
+      ]
+    }
+  },
+  "author": "Torleif Berger <torleif@outlook.com> (https://www.geekality.net)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/svish/cypress-helper-redux"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "cypress": ">=0.20.0",
+    "redux": ">=4.0.1"
+  },
+  "devDependencies": {
+    "cypress": "^3.3.2",
+    "prettier": "^1.18.2",
+    "redux": "^4.0.1",
+    "release-it": "^12.3.2",
+    "typescript": "^3.5.2"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "projectId": "cypress-helper-getcy",
+  "baseUrl": "http://localhost:3000",
+  "integrationFolder": "tests",
+  "fixturesFolder": false,
+  "supportFile": "support.js",
+  "pluginsFile": "plugins.js",
+  "video": false
+}

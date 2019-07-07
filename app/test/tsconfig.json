@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig",
+  "compilerOptions": {
+    "baseUrl": "../node_modules",
+    "isolatedModules": false,
+    "types": ["cypress", "mocha", "cypress-helper-redux"]
+  },
+  "include": ["**/*"]
+}

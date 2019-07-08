@@ -24,11 +24,6 @@
     },
     "github": {
       "release": true
-    },
-    "hooks": {
-      "before:init": [
-        "npm test"
-      ]
     }
   },
   "author": "Torleif Berger <torleif@outlook.com> (https://www.geekality.net)",
@@ -37,7 +32,7 @@
     "url": "https://github.com/svish/cypress-helper-redux"
   },
   "main": "dist/index.js",
-  "types": "dist/globals.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],

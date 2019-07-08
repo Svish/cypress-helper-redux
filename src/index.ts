@@ -1,7 +1,9 @@
+/// <reference path="./globals.ts"/>
+
 import redux from './redux';
 import reduxDispatch from './reduxDispatch';
 import reduxVisit from './reduxVisit';
 
-Cypress.Commands.add('redux', redux);
-Cypress.Commands.add('reduxDispatch', reduxDispatch);
-Cypress.Commands.add('reduxVisit', reduxVisit);
+Cypress.Commands.add('redux', { prevSubject: false }, redux);
+Cypress.Commands.add('reduxDispatch', { prevSubject: false }, reduxDispatch);
+Cypress.Commands.add('reduxVisit', { prevSubject: false }, reduxVisit);

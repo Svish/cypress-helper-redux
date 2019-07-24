@@ -1,6 +1,6 @@
 # cypress-helper-redux
 
-![npm](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square)
+[![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
 
 > [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating Redux in tests.
 

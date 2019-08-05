@@ -10,6 +10,7 @@
   ],
   "license": "MIT",
   "scripts": {
+    "postinstall": "cd app && npm install",
     "prepare": "tsc",
     "watch": "tsc --watch --preserveWatchOutput --listEmittedFiles",
     "lint:ts": "tsc --noEmit",

@@ -41,10 +41,10 @@
     "redux": ">=4.0.1"
   },
   "devDependencies": {
-    "cypress": "^3.3.2",
+    "cypress": "^3.4.1",
     "prettier": "^1.18.2",
-    "redux": "^4.0.1",
-    "release-it": "^12.3.2",
-    "typescript": "^3.5.2"
+    "redux": "^4.0.4",
+    "release-it": "^12.3.5",
+    "typescript": "^3.5.3"
   }
 }

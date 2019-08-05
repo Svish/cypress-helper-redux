@@ -64,4 +64,4 @@ cy.reduxDispatch(() => [
 ]);
 ```
 
-_**Note:** See [tests](test/tests/redux.ts) for more examples._
+_**Note:** See [app](app) for an actual setup and usage of this._

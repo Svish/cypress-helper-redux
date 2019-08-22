@@ -1,5 +1,5 @@
 import { Store } from 'redux';
-import { STORE } from './helpers';
+import { STORE } from './util';
 
 export type ReduxCallback = (store: Store) => void;
 

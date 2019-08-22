@@ -3,7 +3,7 @@
 import redux from './redux';
 import reduxDispatch from './reduxDispatch';
 import reduxVisit from './reduxVisit';
-import { ifCypress } from './helpers';
+import { ifCypress } from './util';
 
 ifCypress(() => {
   Cypress.Commands.add('redux', { prevSubject: false }, redux);

@@ -1,4 +1,4 @@
-import { INITIAL_STATE } from './helpers';
+import { INITIAL_STATE } from './util';
 export default (
   url: string,
   options: { initialState: any } & Partial<Cypress.VisitOptions>

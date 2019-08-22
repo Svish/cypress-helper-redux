@@ -14,7 +14,7 @@
 1. Install:
 
 ```shell
-npm install cypress-helper-redux
+npm install --save-dev cypress-helper-redux
 ```
 
 2. Include:

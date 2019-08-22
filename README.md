@@ -11,20 +11,20 @@
 
 ## Setup
 
-1. Install:
+### 1. Install:
 
 ```shell
 npm install --save-dev cypress-helper-redux
 ```
 
-2. Include:
+### 2. Include:
 
 ```ts
 // cypress/support/index.ts
 include 'cypress-helper-redux';
 ```
 
-3. Connect:
+### 3. Connect:
 
 ```ts
 // e.g. in src/store/index.ts

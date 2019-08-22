@@ -2,6 +2,8 @@ import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 
+import { exposeForCypress } from 'cypress-helper-redux';
+
 import rootReducer from './rootReducer';
 
 // Compose enhancer
@@ -22,7 +24,4 @@ export * from './rootReducer';
 export * from './rootAction';
 
 // Expose store to Cypress
-// TODO: Expose helper for doing this
-if ('Cypress' in window) {
-  (window as any).__chr__reduxStore__ = store;
-}
+exposeForCypress(store);

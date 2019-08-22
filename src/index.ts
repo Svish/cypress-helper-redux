@@ -1,5 +1,7 @@
 /// <reference path="./globals.ts"/>
 
+export { exposeForCypress } from './util';
+
 import redux from './redux';
 import reduxVisit from './reduxVisit';
 import reduxDispatch from './reduxDispatch';

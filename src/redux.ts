@@ -1,10 +1,13 @@
 import { Store } from 'redux';
-import { STORE } from './util';
+import { STORE, ACTIONS, State, Action, ActionsCreators } from './util';
 
-export type ReduxCallback = (store: Store) => void;
+export type Callback = (
+  store: Store<State, Action>,
+  actionCreators: ActionsCreators
+) => void;
 
 // TODO: Add option to turn off logging, like for `get`
-export default (callback: ReduxCallback): void => {
+export default (callback: Callback): void => {
   Cypress.log({
     name: 'redux',
     displayName: 'Redux',
@@ -13,6 +16,7 @@ export default (callback: ReduxCallback): void => {
 
   const window = (cy as any).state('window');
 
-  callback(window[STORE]);
+  callback(window[STORE], window[ACTIONS]);
+
   // TODO: Investigate possibility for snapshot logging before and after...
 };

@@ -5,7 +5,7 @@ import { RootState } from './rootReducer';
 import { ThunkAction as GenericThunkAction } from 'redux-thunk';
 import { actions as items } from '../components/Items/items.ducks';
 
-// TODO: Expose helper for these actions?
+// TODO: Expose helper for these utility actions?
 const actionCreators = {
   reset: createStandardAction('@@reset')(),
   set: createStandardAction('@@set')<Partial<RootState>>(),
@@ -17,9 +17,9 @@ export type RootAction = ActionType<ActionCreators>;
 export default actionCreators;
 
 // Expose actions to Cypress
+// TODO: Expose helper for doing this
 if ('Cypress' in window) {
-  // TODO: Expose function for doing this in helper
-  (window as any).__reduxActions__ = actionCreators;
+  (window as any).__chr__actionCreators__ = actionCreators;
 }
 
 export type ThunkAction<R = void, E = undefined> = GenericThunkAction<

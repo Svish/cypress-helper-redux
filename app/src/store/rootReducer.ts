@@ -9,7 +9,7 @@ const combinedReducers = combineReducers({
   items,
 });
 
-// TODO: Expose helper for these reducers?
+// TODO: Expose helper for these utility reducers?
 const rootReducer: typeof combinedReducers = (state, action) => {
   switch (action.type) {
     case getType(actions.reset):

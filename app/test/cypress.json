@@ -3,7 +3,7 @@
   "baseUrl": "http://localhost:3000",
   "integrationFolder": "tests",
   "fixturesFolder": false,
-  "supportFile": "support.js",
+  "supportFile": "support.ts",
   "pluginsFile": "plugins.js",
   "video": false
 }

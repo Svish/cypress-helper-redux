@@ -1,4 +1,5 @@
 import { Store } from 'redux';
+import { STORE } from './helpers';
 
 export type ReduxCallback = (store: Store) => void;
 
@@ -12,6 +13,6 @@ export default (callback: ReduxCallback): void => {
 
   const window = (cy as any).state('window');
 
-  callback(window.__reduxStore__);
+  callback(window[STORE]);
   // TODO: Investigate possibility for snapshot logging before and after...
 };

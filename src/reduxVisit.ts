@@ -1,3 +1,4 @@
+import { INITIAL_STATE } from './helpers';
 export default (
   url: string,
   options: { initialState: any } & Partial<Cypress.VisitOptions>
@@ -7,7 +8,7 @@ export default (
   return cy.visit(url, {
     ...visitOptions,
     onBeforeLoad: window => {
-      (window as any).__initialState__ = initialState;
+      (window as any)[INITIAL_STATE] = initialState;
 
       Cypress.log({
         name: 'reduxVisit',

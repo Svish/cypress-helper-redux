@@ -3,7 +3,7 @@
   "baseUrl": "http://localhost:3000",
   "integrationFolder": "tests",
   "fixturesFolder": false,
-  "supportFile": "support.ts",
+  "supportFile": "support/index.ts",
   "pluginsFile": "plugins.js",
   "viewportWidth": 320,
   "viewportHeight": 568,

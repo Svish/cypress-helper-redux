@@ -7,13 +7,13 @@ const ItemList: React.FC = () => {
   const items = useSelector(select.items);
 
   return (
-    <ol data-cy="list">
+    <ul data-cy="list">
       {items.map((item, i) => (
         <li data-cy="list/item" key={i}>
           {item}
         </li>
       ))}
-    </ol>
+    </ul>
   );
 };
 

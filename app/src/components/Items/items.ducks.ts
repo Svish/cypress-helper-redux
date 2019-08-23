@@ -41,7 +41,7 @@ export default (state = INITIAL_STATE, action: Action): State => {
       return { ...state, new: action.payload };
 
     case getType(actions.addItem):
-      const items = [...state.items, action.payload];
+      const items = [action.payload, ...state.items];
       return { ...state, new: '', items };
 
     default:

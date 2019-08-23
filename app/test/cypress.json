@@ -5,5 +5,7 @@
   "fixturesFolder": false,
   "supportFile": "support.ts",
   "pluginsFile": "plugins.js",
+  "viewportWidth": 320,
+  "viewportHeight": 568,
   "video": false
 }

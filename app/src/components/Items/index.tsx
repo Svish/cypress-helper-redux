@@ -5,8 +5,13 @@ import ItemList from './ItemList';
 
 const Items: React.FC = () => (
   <>
-    <NewItemForm />
-    <ItemList />
+    <div id="top">
+      <h1>Todo</h1>
+      <NewItemForm />
+    </div>
+    <div id="bottom">
+      <ItemList />
+    </div>
   </>
 );
 

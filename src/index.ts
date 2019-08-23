@@ -1,4 +1,4 @@
-/// <reference path="./index.d.ts"/>
+/// <reference path="./cypress.ts"/>
 
 import redux from './redux';
 import reduxVisit from './reduxVisit';

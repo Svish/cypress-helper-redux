@@ -41,7 +41,7 @@ const initialState =
 const store = createStore(rootReducer, initialState);
 
 // Expose it so the helper knows where to find it
-if ('Cypress' in window) (window as any).__chr__ReduxStore__ = store;
+if ('Cypress' in window) (window as any).__chr__reduxStore__ = store;
 ```
 
 ## Usage

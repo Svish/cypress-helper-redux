@@ -12,12 +12,12 @@
   "scripts": {
     "postinstall": "cd app && npm install",
     "prepare": "tsc",
-    "start": "run-p -slc watch start:app",
+    "start": "run-p --silent --print-label --race watch start:app",
     "start:app": "cd app && npm run start",
-    "test": "run-s -slc prepare test:app",
+    "test": "run-s --silent prepare test:app",
     "test:app": "cd app && npm run test",
     "watch": "tsc --watch --preserveWatchOutput --listEmittedFiles",
-    "lint": "run-p -slc --aggregate-output lint:*",
+    "lint": "run-p --silent --aggregate-output --continue-on-error --aggregate-output lint:*",
     "lint:ts": "tsc --noEmit",
     "lint:prettier": "prettier --ignore-path .gitignore --check \"**/*\"",
     "release": "release-it"

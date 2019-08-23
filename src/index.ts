@@ -1,4 +1,4 @@
-/// <reference path="./globals.ts"/>
+/// <reference path="./index.d.ts"/>
 
 import redux from './redux';
 import reduxVisit from './reduxVisit';

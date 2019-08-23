@@ -1,10 +1,12 @@
 import redux from './redux';
 import { Action, ActionsCreators } from './util';
 
-type Callback = (actionCreators: ActionsCreators) => Action | Action[];
+type ReduxDispatchCallback = (
+  actionCreators: ActionsCreators
+) => Action | Action[];
 
 // TODO: Add option to turn off logging, like for `get`
-export default (callback: Callback): void => {
+export default (callback: ReduxDispatchCallback): void => {
   redux(({ dispatch }, actionCreators) => {
     const actions = callback(actionCreators);
     for (const action of Array.isArray(actions) ? actions : [actions]) {

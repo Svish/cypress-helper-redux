@@ -1,7 +1,12 @@
-import { INITIAL_STATE } from './util';
+import { INITIAL_STATE, State } from './util';
+
+type ReduxVisitOptions = { initialState: State } & Partial<
+  Cypress.VisitOptions
+>;
+
 export default (
   url: string,
-  options: { initialState: any } & Partial<Cypress.VisitOptions>
+  options: ReduxVisitOptions
 ): Cypress.Chainable<Window> => {
   const { initialState, onBeforeLoad, ...visitOptions } = options;
 

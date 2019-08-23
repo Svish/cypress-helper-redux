@@ -1,13 +1,13 @@
 import { Store } from 'redux';
 import { STORE, ACTIONS, State, Action, ActionsCreators } from './util';
 
-export type Callback = (
+type ReduxCallback = (
   store: Store<State, Action>,
   actionCreators: ActionsCreators
 ) => void;
 
 // TODO: Add option to turn off logging, like for `get`
-export default (callback: Callback): void => {
+export default (callback: ReduxCallback): void => {
   Cypress.log({
     name: 'redux',
     displayName: 'Redux',

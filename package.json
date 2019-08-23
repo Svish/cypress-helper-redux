@@ -12,6 +12,7 @@
   "scripts": {
     "postinstall": "cd app && npm install",
     "prepare": "tsc",
+    "clean": "rimraf dist app/build",
     "start": "run-p --silent --print-label --race watch start:app",
     "start:app": "cd app && npm run start",
     "test": "run-s --silent prepare test:app",
@@ -63,6 +64,7 @@
     "prettier": "^1.18.2",
     "redux": "^4.0.4",
     "release-it": "^12.3.5",
+    "rimraf": "^3.0.0",
     "typescript": "^3.5.3"
   }
 }

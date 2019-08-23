@@ -23,5 +23,6 @@ const rootReducer: typeof combinedReducers = (state, action) => {
   }
 };
 
+// TODO: Somehow connect this type to State type of helper
 export type RootState = StateType<typeof rootReducer>;
 export default rootReducer;

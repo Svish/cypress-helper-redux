@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
 
-> [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a Redux store during testing. For example to set up a predictable state before certain tests, validate state after tests have run, etc.
+> [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to set up a predictable state before certain tests, validate state after tests have run, etc.
 
 ## Inspiration
 
@@ -29,7 +29,7 @@ include 'cypress-helper-redux';
 ```ts
 // e.g. in src/store/index.ts
 
-// Get your initial state set via reduxVisit, if any:
+// Get initial state (from cy.reduxVisit):
 const initialState =
   'Cypress' in window ? (window as any).__chr__initialState__ : undefined;
 
@@ -42,7 +42,9 @@ if ('Cypress' in window) (window as any).__chr__ReduxStore__ = store;
 
 ## Usage
 
-> _**Note:** For a working example of setting up and using this helper, you can check out the [test app](app)._
+> **Note:** For a working example of setting up and using this helper, you can check out the [test app](app).
+>
+> It's also an example of setting up [`redux-devtools-extension`](https://www.npmjs.com/package/redux-devtools-extension), and of using [`typesafe-actions`](https://www.npmjs.com/package/typesafe-actions), [Redux Hooks](https://reactjs.org/docs/hooks-intro.html) and a variant of [Redux Ducks](https://github.com/erikras/ducks-modular-redux) for (imo) a pretty strongly typed Redux setup, without a lot of hassle.
 
 ### `cy.reduxVisit`
 

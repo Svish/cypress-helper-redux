@@ -29,14 +29,14 @@ include 'cypress-helper-redux';
 ```ts
 // e.g. in src/store/index.ts
 
-// Get initial state (from cy.reduxVisit):
+// Get initial state (from cy.reduxVisit)
 const initialState =
   'Cypress' in window ? (window as any).__chr__initialState__ : undefined;
 
-// Create the store, as you normally would:
+// Create the store, as you normally would
 const store = createStore(rootReducer, initialState);
 
-// Expose it so the helper knows where to find it:
+// Expose it so the helper knows where to find it
 if ('Cypress' in window) (window as any).__chr__ReduxStore__ = store;
 ```
 
@@ -48,7 +48,7 @@ if ('Cypress' in window) (window as any).__chr__ReduxStore__ = store;
 
 ### `cy.reduxVisit`
 
-A wrapper around `cy.visit` which allows you to specify the initial state you want for a test.
+A wrapper around `cy.visit` allowing you to specify the initial Redux state you want for a test.
 
 ```ts
 cy.reduxVisit('/', {
@@ -56,7 +56,7 @@ cy.reduxVisit('/', {
 });
 ```
 
-Any other options you supply will be passed through to the wrapped call to `cy.visit`.
+Any other options you supply will be passed through to `cy.visit`.
 
 ```ts
 cy.reduxVisit('/', {
@@ -97,23 +97,23 @@ cy.redux(({ getState, dispatch }) => {
 
 ### `cy.reduxDispatch`
 
-Wrapper around `cy.redux` for a cleaner way to only dispatch an action or two.
+Wrapper around `cy.redux` for when you just want to dispatch an action, for example to set something up for a test.
 
 ```ts
-// Using plain object:
+// Using a plain object
 cy.reduxDispatch(() => ({ type: 'my-action' }));
 
-// Using an action creator:
+// Using an action creator
 cy.reduxDispatch(() => myAction());
 ```
 
 You can also return an `array` to easily dispatch multiple actions in order.
 
 ```ts
-// Using plain objects:
+// Using plain objects
 cy.reduxDispatch(() => [{ type: 'my-action' }, { type: 'my-other-action' }]);
 
-// Using action creators:
+// Using action creators
 cy.reduxDispatch(() => [myAction(), myOtherAction()]);
 ```
 
@@ -137,7 +137,7 @@ import { actions as bar } from '../components/Bar/bar.ducks';
 // Gather them all up into an object
 const actionCreators = { foo, bar };
 
-// Expose it so the helper knows where to find it:
+// Expose it so the helper knows where to find it
 if ('Cypress' in window) {
   (window as any).__chr__actionCreators__ = actionCreators;
 }
@@ -158,7 +158,7 @@ cy.reduxDispatch(actions => [
   actions.bar.doThree(),
 ]);
 
-// Potentially even more compact using destructuring:
+// Potentially even more compact using destructuring
 cy.reduxDispatch(({ bar }) => [bar.doOne(), bar.doTwo(), bar.doThree()]);
 ```
 

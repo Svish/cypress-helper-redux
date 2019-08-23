@@ -2,7 +2,11 @@
 
 [![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
 
-> [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to set up a predictable state before certain tests, validate state after tests have run, etc.
+> [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to:
+>
+> - Set up a predictable state before certain tests
+> - Dispatch actions to make state adjustmens during tests
+> - Validate state during or after tests have run
 
 ## Inspiration
 
@@ -95,9 +99,28 @@ cy.redux(({ getState, dispatch }) => {
 });
 ```
 
+### `cy.reduxSelect`
+
+Wrapper around `cy.redux` for when you just want to select a value from the current state, for example to validate something after or during a test.
+
+```ts
+// Using a function
+cy.reduxSelect(
+  state => state.foobar,
+  value => {
+    expect(value).to.equal('something');
+  }
+);
+
+// Using an already defined selector function
+cy.reduxSelect(selectFoobar, value => {
+  expect(value).to.equal('something');
+});
+```
+
 ### `cy.reduxDispatch`
 
-Wrapper around `cy.redux` for when you just want to dispatch an action, for example to set something up for a test.
+Wrapper around `cy.redux` for when you just want to dispatch an action, for example to set something up before or during test.
 
 ```ts
 // Using a plain object

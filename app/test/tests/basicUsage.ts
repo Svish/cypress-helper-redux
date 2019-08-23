@@ -43,4 +43,14 @@ describe('Redux Helper: Basic usage', () => {
       });
     });
   });
+
+  describe('reduxSelect', () => {
+    it('can select and return a value', () => {
+      cy.reduxDispatch(() => actions.setNew('get-me'));
+
+      cy.reduxSelect(select.new, value => {
+        expect(value).to.equal('get-me');
+      });
+    });
+  });
 });

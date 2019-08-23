@@ -187,12 +187,14 @@ cy.reduxDispatch(({ bar }) => [bar.doOne(), bar.doTwo(), bar.doThree()]);
 
 # TODO
 
-1. **Strongly typed state and action creators**  
+1. **Make it possible for `cy.reduxSelect` to get a "selector object" to `cy.reduxDispatch`**
+
+2. **Strongly typed state and action creators**  
    The state and action creators are currently both typed as `any` (in the added helper methods), and I'd really like them not to be. But I'm not sure how to get those types from the application code "into" the added Cypress helper method chaining thing in a smooth way... ideas are welcome... 🤔
 
-2. **Snapshot logging**  
+3. **Snapshot logging**  
    In Cypress there seems to be a way to do snapshot logging, which would be perfect to do before and after having dispatched any actions. However, I haven't yet been able to figure out exactly how one does that... please let me know if you have any pointers... 😕
 
-3. **Helper functions to connect store and action creators to the helper**  
+4. **Helper functions to connect store and action creators to the helper**  
    Should be simple in theory, but for some reason, everything seems to crash (`cy is not defined` in Cypress) the instant I do any imports in the application code from the helper code... 😕  
    Might also be simple enough as it is... and it prevents any helper code ending up in the application bundle, so... maybe better the way it is...?

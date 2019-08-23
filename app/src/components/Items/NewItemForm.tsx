@@ -28,11 +28,14 @@ const NewItemForm: React.FC = () => {
         type="text"
         placeholder="New item"
         value={value}
+        data-cy="form/input"
         onChange={handleValueChanged}
         autoFocus={true}
         autoComplete="off"
       ></input>
-      <button type="submit">Add</button>
+      <button type="submit" data-cy="form/button" disabled={!value}>
+        Add
+      </button>
     </form>
   );
 };

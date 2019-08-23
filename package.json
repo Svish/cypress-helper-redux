@@ -1,6 +1,6 @@
 {
   "name": "cypress-helper-redux",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Cypress commands for manipulating Redux in tests",
   "keywords": [
     "cypress",

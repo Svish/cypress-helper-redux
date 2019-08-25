@@ -1,5 +1,5 @@
 import { Store } from 'redux';
-import { STORE, ACTIONS, State, Action, ActionsCreators } from './util';
+import { STORE, ACTIONS, State, Action, ActionsCreators } from './common';
 
 type ReduxCallback = (
   store: Store<State, Action>,

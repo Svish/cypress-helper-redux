@@ -5,7 +5,7 @@ import reduxVisit from './reduxVisit';
 import reduxDispatch from './reduxDispatch';
 import reduxSelect from './reduxSelect';
 
-import { ifCypress } from './util';
+import { ifCypress } from './common';
 
 ifCypress(() => {
   Cypress.Commands.add('redux', { prevSubject: false }, redux);

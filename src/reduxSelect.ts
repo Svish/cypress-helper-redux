@@ -1,5 +1,5 @@
 import redux from './redux';
-import { State } from './util';
+import { State } from './common';
 
 type ReduxSelectSelector<T> = (state: State) => T;
 type ReduxSelectCallback<T> = (value: T) => void;

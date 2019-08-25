@@ -1,5 +1,5 @@
 import redux from './redux';
-import { Action, ActionsCreators } from './util';
+import { Action, ActionsCreators } from './common';
 
 type ReduxDispatchCallback = (
   actionCreators: ActionsCreators

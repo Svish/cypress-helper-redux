@@ -1,19 +1,12 @@
 # cypress-helper-redux
 
-[![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square) ![npm downloads](https://img.shields.io/npm/dm/cypress-helper-redux?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
-
-[Inspiration](#inspiration)
-| [Usage](#usage)
-| [Setup](#setup)
-| [Sample application](#sample)
-
 [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to:
 
 - Set up a predictable state before certain tests
 - Dispatch actions to make state adjustmens before or during tests
 - Validate state during or after tests have run
 
----
+[![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square) ![npm downloads](https://img.shields.io/npm/dm/cypress-helper-redux?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
 
 ## Inspiration
 

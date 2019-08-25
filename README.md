@@ -1,12 +1,19 @@
 # cypress-helper-redux
 
-[![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
+[![npm version](https://img.shields.io/npm/v/cypress-helper-redux.svg?style=flat-square) ![npm downloads](https://img.shields.io/npm/dm/cypress-helper-redux?style=flat-square)](https://www.npmjs.com/package/cypress-helper-redux)
 
-> [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to:
->
-> - Set up a predictable state before certain tests
-> - Dispatch actions to make state adjustmens before or during tests
-> - Validate state during or after tests have run
+[Inspiration](#inspiration)
+| [Usage](#usage)
+| [Setup](#setup)
+| [Sample application](#sample)
+
+[Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to:
+
+- Set up a predictable state before certain tests
+- Dispatch actions to make state adjustmens before or during tests
+- Validate state during or after tests have run
+
+---
 
 ## Inspiration
 
@@ -17,7 +24,7 @@
 
 ### `cy.reduxVisit`
 
-A wrapper around [`cy.visit`](https://docs.cypress.io/api/commands/visit.html#Syntax) which allows you to specify the initial Redux state you want for a test:
+A wrapper around [`cy.visit`](https://docs.cypress.io/api/commands/visit.html#Syntax) allowing you to specify the initial Redux state you want for a test:
 
 ```ts
 cy.reduxVisit('/', {
@@ -141,8 +148,6 @@ cy.reduxDispatch(actions => [
 
 ## Setup
 
-> _**Note:** For a complete example on hooking things up, with types and everything, have a look at the [sample app](app)._
-
 ### 1. Install dependency
 
 ```shell
@@ -185,18 +190,18 @@ if ('Cypress' in window) {
 
 The Redux helper should know at least the first 2 of the following types, but preferably all of them if you want full IDE and typechecking joyfulness:
 
-- `MyStore` – The type of your Redux store, i.e. the type of what `createStore` returns  
+- **`MyStore` – The type of your Redux store, i.e. the type of what `createStore` returns**  
   Or `import { Store as MyStore } from redux` if you don't care
-- `MyRootState` – The shape of your root state  
+- **`MyRootState` – The shape of your root state**  
   Or `type MyRootState = any` if you don't care
-- `MyRootAction` – The type of an allowed action  
+- **`MyRootAction` – The type of an allowed action**  
   Or `type MyRootAction = AnyAction` if you don't care or have a type for that
-- `MyActionCreators` – The type of your action creator object  
+- **`MyActionCreators` – The type of your action creator object**  
   Or `type MyActionCreators = any | undefined` if you don't care or don't use it
-- `MySelectors` – The type of your selectors object  
+- **`MySelectors` – The type of your selectors object**  
   Or `type MySelectors = any | undefined` if you don't care or don't use it
 
-I haven't found a way to declare those types in an application and then "inject" them into `cypress-helper-redux` in a way that allows automatically adjusting the Cypress API correctly. So... as a work around, create a type-definition file in you Cypress directory, paste the following into it, and adjust the types mentioned above as needed:
+Haven't found a way to declare those types in an application and then "inject" them into `cypress-helper-redux` in a way that allows automatically adjusting the Cypress API correctly. So... as a work around, create a type-definition file in you Cypress directory, paste the following into it, and adjust the types mentioned above as needed:
 
 ```ts
 // E.g in cypress/support/cypress-helper-redux.d.ts
@@ -266,6 +271,14 @@ declare global {
   }
 }
 ```
+
+## Sample
+
+For a complete example on hooking things up, have a look at the [sample app](app).
+
+It's also an example of how one could write things to make combining Typescript with React/Redux much more enjoyable (in my opinion at least).
+
+It uses for example a variant of [Ducks](https://github.com/erikras/ducks-modular-redux) and [typesafe-actions](https://www.npmjs.com/package/typesafe-actions) for Redux, and [Redux Hooks](https://react-redux.js.org/next/api/hooks) in React the components. You'll also find a typesafe [redux-thunk](https://www.npmjs.com/package/redux-thunk) action, which was interesting to figure out how to type...
 
 # TODO
 

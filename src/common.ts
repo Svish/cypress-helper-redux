@@ -1,6 +1,6 @@
 import { AnyAction, Store as ReduxStore } from 'redux';
 
-export const STORE = '__chr__reduxStore__';
+export const STORE = '__chr__store__';
 export const INITIAL_STATE = '__chr__initialState__';
 export const ACTIONS = '__chr__actionCreators__';
 export const SELECTORS = '__chr__selectors__';

@@ -28,7 +28,7 @@ export * from './rootSelector';
 // TODO: Expose helper for doing this
 if ('Cypress' in window) {
   const win = window as any;
-  win.__chr__reduxStore__ = store;
+  win.__chr__store__ = store;
   win.__chr__actionCreators__ = actionCreators;
   win.__chr__selectors__ = selectors;
 }

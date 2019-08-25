@@ -46,7 +46,7 @@ export default store;
 // Connect with the Cypress helper
 if ('Cypress' in window) {
   const w = window as any;
-  w.__chr__reduxStore__ = store;
+  w.__chr__store__ = store;
 
   // The following is optional
   // See the sample app for an example of how this can be setup and used

@@ -38,7 +38,7 @@
     },
     "git": {
       "tagName": "v%s",
-      "commitArgs": "--gpg-sign",
+      "commitArgs": "--gpg-sign --no-verify",
       "tagArgs": "--sign"
     },
     "github": {

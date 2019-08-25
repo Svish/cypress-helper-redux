@@ -208,7 +208,7 @@ import {
   Selectors as MySelectors,
 } from '../../src/store';
 
-// NOTE: Leave the following untouched
+// NOTE: Do not change the following, unless the API of cypress-helper-redux changes
 
 // Define cy.redux
 interface ReduxResponse {

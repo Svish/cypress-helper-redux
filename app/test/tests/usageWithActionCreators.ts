@@ -7,7 +7,7 @@ describe('Redux Helper: Usage with action creators', () => {
 
   describe('redux', () => {
     it('gets action creators', () => {
-      cy.redux((_, actions) => {
+      cy.redux().then(({ actions }) => {
         expect(actions)
           .to.be.an('object')
           .that.has.all.keys(actionCreators);

@@ -14,8 +14,17 @@ describe('Redux Helper: Basic usage', () => {
 
   describe('reduxVisit', () => {
     it('getStore can get initial state', () => {
-      cy.redux(({ getState }) => {
+      cy.redux().then(({ store: { getState } }) => {
         expect(getState()).to.deep.equal(initialState);
+      });
+    });
+  });
+
+  describe('redux', () => {
+    it('getState and dispatch works', () => {
+      cy.redux().then(({ store: { getState, dispatch } }) => {
+        dispatch(setNew('foobar'));
+        expect(getNew(getState())).to.equal('foobar');
       });
     });
   });
@@ -25,18 +34,9 @@ describe('Redux Helper: Basic usage', () => {
       cy.reduxDispatch(({ set }) => set(initialState));
     });
 
-    describe('redux', () => {
-      it('getState and dispatch works', () => {
-        cy.redux(({ dispatch, getState }) => {
-          dispatch(setNew('foobar'));
-          expect(getNew(getState())).to.equal('foobar');
-        });
-      });
-    });
-
     describe('reduxSelect', () => {
       it('can select and return a value', () => {
-        cy.reduxSelect(getNew, value => {
+        cy.reduxSelect(getNew).then(value => {
           expect(value).to.equal(todo);
         });
       });
@@ -45,21 +45,21 @@ describe('Redux Helper: Basic usage', () => {
     describe('reduxDispatch', () => {
       it('can dispatch single action', () => {
         cy.reduxDispatch(addItem(todo));
-        cy.reduxSelect(getItems, items => {
+        cy.reduxSelect(getItems).then(items => {
           expect(items).to.include(todo);
         });
       });
 
       it('can dispatch multiple actions via multiple parameters', () => {
         cy.reduxDispatch(addItem(items[0]), addItem(items[1]));
-        cy.reduxSelect(getItems, items => {
+        cy.reduxSelect(getItems).then(items => {
           expect(items).to.include.members(items);
         });
       });
 
       it('can dispatch multiple actions via array', () => {
         cy.reduxDispatch([addItem(items[0]), addItem(items[1])]);
-        cy.reduxSelect(getItems, items => {
+        cy.reduxSelect(getItems).then(items => {
           expect(items).to.include.members(items);
         });
       });
@@ -67,14 +67,14 @@ describe('Redux Helper: Basic usage', () => {
       context('via callback', () => {
         it('can dispatch single action', () => {
           cy.reduxDispatch(() => addItem('from cypress'));
-          cy.reduxSelect(getItems, items => {
+          cy.reduxSelect(getItems).then(items => {
             expect(items).to.include('from cypress');
           });
         });
 
         it('can dispatch multiple actions', () => {
           cy.reduxDispatch(() => [addItem(items[0]), addItem(items[1])]);
-          cy.reduxSelect(getItems, items => {
+          cy.reduxSelect(getItems).then(items => {
             expect(items).to.include.members(items);
           });
         });

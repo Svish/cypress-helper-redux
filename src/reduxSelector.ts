@@ -1,7 +1,4 @@
-import reduxSelect, {
-  ReduxSelectCallback,
-  ReduxSelectSelector,
-} from './reduxSelect';
+import reduxSelect, { ReduxSelectSelector } from './reduxSelect';
 import { SELECTORS } from './common';
 
 export type ReduxSelectPickSelector<T> = (
@@ -9,11 +6,8 @@ export type ReduxSelectPickSelector<T> = (
 ) => ReduxSelectSelector<T>;
 
 // TODO: Add option to turn off logging, like for `get`
-export default <T>(
-  pickSelector: ReduxSelectPickSelector<T>,
-  callback: ReduxSelectCallback<T>
-): void => {
+export default <T>(pickSelector: ReduxSelectPickSelector<T>): Promise<T> => {
   const window = (cy as any).state('window');
   const selector = pickSelector(window[SELECTORS]);
-  reduxSelect<T>(selector, callback);
+  return reduxSelect<T>(selector);
 };

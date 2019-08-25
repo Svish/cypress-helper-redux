@@ -4,6 +4,11 @@ import reduxDispatch from './reduxDispatch';
 import reduxSelect from './reduxSelect';
 import reduxSelector from './reduxSelector';
 
+export * from './redux';
+export * from './reduxVisit';
+export * from './reduxDispatch';
+export * from './reduxSelect';
+export * from './reduxSelector';
 export { redux, reduxVisit, reduxDispatch, reduxSelect, reduxSelector };
 
 import { ifCypress } from './common';

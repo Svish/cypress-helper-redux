@@ -14,7 +14,7 @@ describe('Redux Helper: Usage with selectors', () => {
 
   describe('redux', () => {
     it('gets selectors', () => {
-      cy.redux((_store, _actions, selectors) => {
+      cy.redux().then(({ selectors }) => {
         expect(selectors)
           .to.be.an('object')
           .that.has.all.keys(selectors);
@@ -24,15 +24,12 @@ describe('Redux Helper: Usage with selectors', () => {
 
   describe('reduxSelector', () => {
     it('gets selectors', () => {
-      cy.reduxSelector(
-        selectors => {
-          expect(selectors)
-            .to.be.an('object')
-            .that.has.all.keys(selectors);
-          return selectors.items.new;
-        },
-        value => expect(value).to.equal(TEST)
-      );
+      cy.reduxSelector(selectors => {
+        expect(selectors)
+          .to.be.an('object')
+          .that.has.all.keys(selectors);
+        return selectors.items.new;
+      }).then(value => expect(value).to.equal(TEST));
     });
   });
 });

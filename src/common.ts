@@ -1,4 +1,4 @@
-import { AnyAction } from 'redux';
+import { AnyAction, Store as ReduxStore } from 'redux';
 
 export const STORE = '__chr__reduxStore__';
 export const INITIAL_STATE = '__chr__initialState__';
@@ -14,3 +14,4 @@ export type Action = AnyAction;
 export type ActionsCreators = any;
 export type Selectors = any;
 export type State = any;
+export type Store = ReduxStore<State, Action>;

@@ -2,16 +2,11 @@ import redux from './redux';
 import { State } from './common';
 
 export type ReduxSelectSelector<T> = (state: State) => T;
-export type ReduxSelectCallback<T> = (value: T) => void;
 
 // TODO: Add option to turn off logging, like for `get`
-export default <T>(
-  selector: ReduxSelectSelector<T>,
-  callback: ReduxSelectCallback<T>
-): void => {
-  redux(({ getState }) => {
-    const value = selector(getState());
-    callback(value);
+export default <T>(selector: ReduxSelectSelector<T>): Promise<T> => {
+  return redux().then(({ store }) => {
+    const value = selector(store.getState());
     Cypress.log({
       name: 'reduxSelect',
       displayName: 'Select',
@@ -20,5 +15,6 @@ export default <T>(
         value,
       }),
     });
+    return value;
   });
 };

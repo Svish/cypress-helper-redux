@@ -17,17 +17,17 @@
     "clean:npm": "rimraf app/node_modules node_modules",
     "start": "run-p --silent --print-label --race watch start:app",
     "start:app": "cd app && npm run start",
-    "test": "run-s --silent clean build test:app",
+    "test": "run-s --silent clean lint build test:app",
     "test:app": "cd app && npm run test",
     "watch": "tsc --watch --preserveWatchOutput --listEmittedFiles",
     "lint": "run-p --silent --aggregate-output --continue-on-error --aggregate-output lint:*",
     "lint:ts": "tsc --noEmit",
-    "lint:prettier": "prettier --ignore-path .gitignore --check \"**/*\"",
+    "lint:prettier": "prettier --ignore-path .lintignore --list-different \"**/*\"",
     "release": "release-it"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s -s lint test"
+      "pre-commit": "npm test"
     }
   },
   "release-it": {

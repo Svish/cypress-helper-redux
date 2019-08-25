@@ -15,14 +15,15 @@ export default (
     onBeforeLoad: window => {
       (window as any)[INITIAL_STATE] = initialState;
 
-      Cypress.log({
-        name: 'reduxVisit',
-        displayName: 'Redux',
-        message: ['initialized state'],
-        consoleProps: () => ({
-          state: initialState,
-        }),
-      });
+      if (visitOptions.log !== false)
+        Cypress.log({
+          name: 'reduxVisit',
+          displayName: 'Redux',
+          message: ['initialized state'],
+          consoleProps: () => ({
+            'Inital State': initialState,
+          }),
+        });
 
       if (typeof onBeforeLoad === 'function') onBeforeLoad(window);
     },

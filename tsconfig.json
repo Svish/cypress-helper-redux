@@ -4,7 +4,7 @@
     "module": "commonjs",
     "lib": ["es6", "dom"],
     "types": ["cypress"],
-    "outDir": "dist",
+    "outDir": "build",
     "declaration": true,
     "strict": true
   },

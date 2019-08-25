@@ -1,9 +1,9 @@
-/// <reference path="./cypress.ts"/>
-
 import redux from './redux';
 import reduxVisit from './reduxVisit';
 import reduxDispatch from './reduxDispatch';
 import reduxSelect from './reduxSelect';
+
+export { redux, reduxVisit, reduxDispatch, reduxSelect };
 
 import { ifCypress } from './common';
 

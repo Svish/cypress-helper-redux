@@ -13,7 +13,8 @@
     "prepare": "run-s build install:app",
     "build": "tsc",
     "install:app": "cd app && npm install",
-    "clean": "rimraf dist app/build",
+    "clean": "rimraf app/build build",
+    "clean:npm": "rimraf app/node_modules node_modules",
     "start": "run-p --silent --print-label --race watch start:app",
     "start:app": "cd app && npm run start",
     "test": "run-s --silent clean build test:app",
@@ -49,10 +50,10 @@
     "type": "git",
     "url": "https://github.com/svish/cypress-helper-redux"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.js",
   "files": [
-    "dist"
+    "build"
   ],
   "peerDependencies": {
     "cypress": ">=0.20.0",

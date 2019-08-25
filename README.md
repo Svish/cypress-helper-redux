@@ -15,44 +15,167 @@
 
 ## Setup
 
-### 1. Install:
+> _**Note:** For a complete example on hooking things up, with types and everything, have a look at the [sample app](app)._
+
+### 1. Install dependency
 
 ```shell
 npm install --save-dev cypress-helper-redux
 ```
 
-### 2. Include:
+### 2. Include the custom commands
 
-```ts
-// cypress/support/index.ts
+```js
+// In e.g. cypress/support/index.ts
 include 'cypress-helper-redux';
 ```
 
-### 3. Connect:
+### 3. Connect the helper with your store
 
 ```ts
-// e.g. in src/store/index.ts
+// E.g. in src/store/index.ts
 
-// Get initial state (from cy.reduxVisit)
+// Get initial state (for using cy.reduxVisit)
 const initialState =
   'Cypress' in window ? (window as any).__chr__initialState__ : undefined;
 
 // Create the store, as you normally would
 const store = createStore(rootReducer, initialState);
+export default store;
 
 // Expose it so the helper knows where to find it
 if ('Cypress' in window) (window as any).__chr__reduxStore__ = store;
 ```
 
-## Usage
+And, optionally, if you want access to an action creators object when using `cy.redux` and `cy.reduxDispatch`:
 
-> **Note:** For a working example of setting up and using this helper, you can check out the [test app](app).
->
-> It's also an example of setting up [`redux-devtools-extension`](https://www.npmjs.com/package/redux-devtools-extension), and of using [`typesafe-actions`](https://www.npmjs.com/package/typesafe-actions), [Redux Hooks](https://reactjs.org/docs/hooks-intro.html) and a variant of [Redux Ducks](https://github.com/erikras/ducks-modular-redux) for (imo) a pretty strongly typed Redux setup, without a lot of hassle.
+```ts
+// E.g. in src/store/rootAction.ts
+
+// Import all the action creators in your application
+import { actions as foo } from '../components/Foo/foo.ducks';
+import { actions as bar } from '../components/Bar/bar.ducks';
+
+// Gather them all up into one object
+const actionCreators = { foo, bar };
+
+// Expose it so the helper knows where to find it
+if ('Cypress' in window) {
+  (window as any).__chr__actionCreators__ = actionCreators;
+}
+```
+
+### 4. If you're using Typescript...
+
+Unfortunately I've not found a simple way to both automatically extend the Cypress chain correctly _**and** allow you to specify/override the type of e.g. your Redux state_. So, the two options I've found which seems to be stable (i.e. work fine in VS Code) are:
+
+#### 4.1. Declare the custom commands via imports
+
+Super easy, but provides no typesafety for e.g. your `state`. They will be of type `any`:
+
+```ts
+// In e.g. cypress/support/cypress-helper-redux.d.ts
+
+// Import the commands
+import {
+  redux,
+  reduxVisit,
+  reduxDispatch,
+  reduxSelect,
+} from 'cypress-helper-redux';
+
+// And add them to the Cypress chain
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      redux: typeof redux;
+      reduxVisit: typeof reduxVisit;
+      reduxDispatch: typeof reduxDispatch;
+      reduxSelect: typeof reduxSelect;
+    }
+  }
+}
+```
+
+#### 4.2. Redeclare the custom commands manually with your wanted types
+
+Lets you specify the type of e.g. your `state`, meaning much better typesafety and help from your IDE when writing tests, but also requires you to declare the Cypress commands for Typescript manually. A bit of a hassle, but it's pretty much copy paste from below, and definitely worth it in my opinion. Up to you what types you define and how (obviously), but I highly recommend at least defining `MyStore` and `MyRootState`. The types used, that you need to define as _something_ are:
+
+- `MyStore` – The type returned by `createStore`
+- `MyRootState` – The shape of your root state
+- `MyRootAction` – The type of allowed actions, e.g. `AnyAction` or a composite type of all your applications defined actions
+- `MyActionCreators` – The type of your action creator object
+
+Create a new file, e.g. `cypress/support/cypress-helper-redux.d.ts`, and start by defining those types:
+
+```ts
+// If you have all the types:
+import {
+  Store as MyStore,
+  RootState as MyRootState,
+  RootAction as MyRootAction,
+  ActionCreators as MyActionCreators,
+} from '../../src/store';
+```
+
+```ts
+// If you for example have store and state,
+// but don't care about action types
+import { Store as MyStore, RootState as MyRootState } from '../../src/store';
+import { AnyAction as MyRootAction } from 'redux';
+type MyActionCreators = undefined;
+```
+
+Then simply copy the following and paste it in below:
+
+```ts
+// Define cy.redux
+type ReduxCallback = (store: MyStore, actionCreators: MyActionCreators) => void;
+type Redux = (callback: ReduxCallback) => void;
+
+// Define cy.reduxVisit
+type ReduxVisitOptions = { initialState: Partial<MyRootState> } & Partial<
+  Cypress.VisitOptions
+>;
+type ReduxVisit = (
+  url: string,
+  options: ReduxVisitOptions
+) => Cypress.Chainable<Window>;
+
+// Define cy.reduxDispatch
+type ReduxDispatchCallback = (
+  actionCreators: ActionsCreators
+) => MyRootAction | MyRootAction[];
+type ReduxDispatch = (callback: ReduxDispatchCallback) => void;
+
+// Define cy.reduxSelect
+type ReduxSelectSelector<T> = (state: MyRootState) => T;
+type ReduxSelectCallback<T> = (value: T) => void;
+type ReduxSelect = <T>(
+  selector: ReduxSelectSelector<T>,
+  callback: ReduxSelectCallback<T>
+) => void;
+
+// Add them all to the Cypress chain
+declare global {
+  declare namespace Cypress {
+    interface Chainable<Subject> {
+      redux: Redux;
+      reduxVisit: ReduxVisit;
+      reduxDispatch: ReduxDispatch;
+      reduxSelect: ReduxSelect;
+    }
+  }
+}
+```
+
+> _**Please**, do let me know if you have any ideas of how to make this easier..._
+
+## Usage
 
 ### `cy.reduxVisit`
 
-A wrapper around `cy.visit` allowing you to specify the initial Redux state you want for a test.
+A wrapper around [`cy.visit`](https://docs.cypress.io/api/commands/visit.html#Syntax) which allows you to specify the initial Redux state you want for a test:
 
 ```ts
 cy.reduxVisit('/', {
@@ -60,7 +183,7 @@ cy.reduxVisit('/', {
 });
 ```
 
-Any other options you supply will be passed through to `cy.visit`.
+Other options you supply will be sent through to `cy.visit`:
 
 ```ts
 cy.reduxVisit('/', {
@@ -70,7 +193,7 @@ cy.reduxVisit('/', {
 });
 ```
 
-If you don't want/need to specify any initial state, you can of course also just use `cy.visit` as you normally would.
+If you don't want or need to specify any initial state, you can of course also just use `cy.visit` as you normally would.
 
 ### `cy.redux`
 
@@ -88,13 +211,21 @@ cy.redux(store => {
 });
 ```
 
-Using destructuring, action creators and selector functions can make your tests even cleaner:
+If you hooked up the action creators object, it's passed in as the second argument:
 
 ```ts
-cy.redux(({ getState, dispatch }) => {
-  dispatch(setValue('something'));
+cy.redux((store, actions) => {
+  store.dispatch(actions.foo.setSomething('something'));
+});
+```
 
-  const value = getValue(getState());
+With destructuring:
+
+```ts
+cy.redux(({ getState, dispatch }, { foo }) => {
+  dispatch(foo.setSomething('something'));
+
+  const { value } = getState().foobar;
   expect(value).to.equal('something');
 });
 ```
@@ -120,81 +251,48 @@ cy.reduxSelect(selectFoobar, value => {
 
 ### `cy.reduxDispatch`
 
-Wrapper around `cy.redux` for when you just want to dispatch an action, for example to set something up before or during test.
+Wrapper around `cy.redux` for when you just want to dispatch an action or three, for example to set something up before or during test.
 
 ```ts
-// Using a plain object
 cy.reduxDispatch(() => ({ type: 'my-action' }));
 
-// Using an action creator
-cy.reduxDispatch(() => myAction());
+cy.reduxDispatch(() => [
+  { type: 'my-action' },
+  { type: 'my-other-action' },
+  { type: 'my-third-action' },
+]);
 ```
 
-You can also return an `array` to easily dispatch multiple actions in order.
+If you hooked up the action creators object, it's passed in as the first argument:
 
 ```ts
-// Using plain objects
-cy.reduxDispatch(() => [{ type: 'my-action' }, { type: 'my-other-action' }]);
-
-// Using action creators
-cy.reduxDispatch(() => [myAction(), myOtherAction()]);
-```
-
-## Usage with an Action Creators object
-
-To create actions to dispatch you can (of course) both implement custom action creators in your tests and import action creators from application code. However, sometimes this can be tricky since Cypress will then (obviously) need access to your application source code _and_ know how to and compile/read it properly. With a combination of typescript, webpack, babel, bundlers, etc., etc., this can sometimes be easier said than done...
-
-I want dispatching actions to be as simple and clean as possible, so my tests can be kept as simple and clean as possible, regardless of all that.
-
-So, optionally, you can also expose an "action creators object" to the helper which will then be passed along to any `cy.redux` and `cy.reduxDispatch` callbacks.
-
-### Setup
-
-```ts
-// e.g. in src/store/rootAction.ts
-
-// Import all the action creators from your application
-import { actions as foo } from '../components/Foo/foo.ducks';
-import { actions as bar } from '../components/Bar/bar.ducks';
-
-// Gather them all up into an object
-const actionCreators = { foo, bar };
-
-// Expose it so the helper knows where to find it
-if ('Cypress' in window) {
-  (window as any).__chr__actionCreators__ = actionCreators;
-}
-```
-
-### Usage
-
-```ts
-cy.redux((store, actions) => {
-  store.dispatch(actions.foo.someAction());
-});
-
-cy.reduxDispatch(actions => actions.foo.someAction());
+cy.reduxDispatch(actions => actions.foo.myAction());
 
 cy.reduxDispatch(actions => [
-  actions.bar.doOne(),
-  actions.bar.doTwo(),
-  actions.bar.doThree(),
+  actions.foo.myAction(),
+  actions.foo.myOtherAction(),
+  actions.foo.myThirdAction(),
 ]);
+```
 
-// Potentially even more compact using destructuring
-cy.reduxDispatch(({ bar }) => [bar.doOne(), bar.doTwo(), bar.doThree()]);
+Using destructuring:
+
+```ts
+cy.reduxDispatch(({ foo }) => [
+  foo.myAction(),
+  foo.myOtherAction(),
+  foo.myThirdAction(),
+]);
 ```
 
 # TODO
 
-1. **Make it possible for `cy.reduxSelect` to get a "selector object" to `cy.reduxDispatch`**
+1. **Strongly typed state and action creators**  
+   Figure out a better way to get typesafe Cypress commands... 🤔
 
-2. **Strongly typed state and action creators**  
-   The state and action creators are currently both typed as `any` (in the added helper methods), and I'd really like them not to be. But I'm not sure how to get those types from the application code "into" the added Cypress helper method chaining thing in a smooth way... ideas are welcome... 🤔
+2. **Snapshot logging**  
+   In Cypress there seems to be a way to do snapshot logging, which would be perfect to do before and after having dispatched any actions. However, I haven't yet been able to figure out exactly how one does that... please let me know if you have any pointers... 🤔
 
-3. **Snapshot logging**  
-   In Cypress there seems to be a way to do snapshot logging, which would be perfect to do before and after having dispatched any actions. However, I haven't yet been able to figure out exactly how one does that... please let me know if you have any pointers... 😕
-
-4. **Helper functions to connect store and action creators to the helper**  
-   Should be simple in theory, but for some reason, everything seems to crash (`cy is not defined` in Cypress) the instant I do any imports in the application code from the helper code... 😕  
-   Might also be simple enough as it is... and it prevents any helper code ending up in the application bundle, so... maybe better the way it is...?
+3. **Helper functions to connect store and action creators to the helper**  
+   Should be simple in theory, but for some reason, everything seems to crash (getting `cy is not defined` in Cypress) the instant I do _any_ import of helper code from application code... 😕  
+   Might also be simple enough as it is... and it prevents any helper code ending up in the application bundle, so... maybe better the way it is...? 🤔

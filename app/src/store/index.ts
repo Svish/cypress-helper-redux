@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 
 import rootReducer from './rootReducer';
 import actionCreators from './rootAction';
+import selectors from './rootSelector';
 
 // Compose enhancer
 const middlewares = [thunk];
@@ -21,6 +22,7 @@ export default store;
 export type Store = typeof store;
 export * from './rootReducer';
 export * from './rootAction';
+export * from './rootSelector';
 
 // Expose store to Cypress
 // TODO: Expose helper for doing this
@@ -28,4 +30,5 @@ if ('Cypress' in window) {
   const win = window as any;
   win.__chr__reduxStore__ = store;
   win.__chr__actionCreators__ = actionCreators;
+  win.__chr__selectors__ = selectors;
 }

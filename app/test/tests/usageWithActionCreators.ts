@@ -1,4 +1,4 @@
-import rootAction from '../../src/store/rootAction';
+import actionCreators from '../../src/store/rootAction';
 
 describe('Redux Helper: Usage with action creators', () => {
   before(() => {
@@ -10,7 +10,7 @@ describe('Redux Helper: Usage with action creators', () => {
       cy.redux((_, actions) => {
         expect(actions)
           .to.be.an('object')
-          .that.has.all.keys(rootAction);
+          .that.has.all.keys(actionCreators);
       });
     });
   });
@@ -20,7 +20,7 @@ describe('Redux Helper: Usage with action creators', () => {
       cy.reduxDispatch(actions => {
         expect(actions)
           .to.be.an('object')
-          .that.has.all.keys(rootAction);
+          .that.has.all.keys(actionCreators);
         return [];
       });
     });

@@ -43,25 +43,15 @@ const initialState =
 const store = createStore(rootReducer, initialState);
 export default store;
 
-// Expose it so the helper knows where to find it
-if ('Cypress' in window) (window as any).__chr__reduxStore__ = store;
-```
-
-And, optionally, if you want access to an action creators object when using `cy.redux` and `cy.reduxDispatch`:
-
-```ts
-// E.g. in src/store/rootAction.ts
-
-// Import all the action creators in your application
-import { actions as foo } from '../components/Foo/foo.ducks';
-import { actions as bar } from '../components/Bar/bar.ducks';
-
-// Gather them all up into one object
-const actionCreators = { foo, bar };
-
-// Expose it so the helper knows where to find it
+// Connect with the Cypress helper
 if ('Cypress' in window) {
-  (window as any).__chr__actionCreators__ = actionCreators;
+  const w = window as any;
+  w.__chr__reduxStore__ = store;
+
+  // The following is optional
+  // See the sample app for an example of how this can be setup and used
+  w.__chr__actionCreators__ = actionCreators;
+  w.__chr__selectors__ = selectors;
 }
 ```
 
@@ -82,6 +72,7 @@ import {
   reduxVisit,
   reduxDispatch,
   reduxSelect,
+  reduxSelector,
 } from 'cypress-helper-redux';
 
 // And add them to the Cypress chain
@@ -92,6 +83,7 @@ declare global {
       reduxVisit: typeof reduxVisit;
       reduxDispatch: typeof reduxDispatch;
       reduxSelect: typeof reduxSelect;
+      reduxSelector: typeof reduxSelector;
     }
   }
 }
@@ -105,6 +97,7 @@ Lets you specify the type of e.g. your `state`, meaning much better typesafety a
 - `MyRootState` – The shape of your root state
 - `MyRootAction` – The type of allowed actions, e.g. `AnyAction` or a composite type of all your applications defined actions
 - `MyActionCreators` – The type of your action creator object
+- `MySelectors` – The type of your selectors object
 
 Create a new file, e.g. `cypress/support/cypress-helper-redux.d.ts`, and start by defining those types:
 
@@ -115,22 +108,28 @@ import {
   RootState as MyRootState,
   RootAction as MyRootAction,
   ActionCreators as MyActionCreators,
+  Selectors as MySelectors,
 } from '../../src/store';
 ```
 
 ```ts
 // If you for example have store and state,
-// but don't care about action types
+// but don't care about action types and selectors
 import { Store as MyStore, RootState as MyRootState } from '../../src/store';
 import { AnyAction as MyRootAction } from 'redux';
 type MyActionCreators = undefined;
+type MySelectors = undefined;
 ```
 
 Then simply copy the following and paste it in below:
 
 ```ts
 // Define cy.redux
-type ReduxCallback = (store: MyStore, actionCreators: MyActionCreators) => void;
+type ReduxCallback = (
+  store: MyStore,
+  actionCreators: MyActionCreators,
+  selectors: MySelectors
+) => void;
 type Redux = (callback: ReduxCallback) => void;
 
 // Define cy.reduxVisit
@@ -144,9 +143,13 @@ type ReduxVisit = (
 
 // Define cy.reduxDispatch
 type ReduxDispatchCallback = (
-  actionCreators: ActionsCreators
+  actions: MyActionCreators
 ) => MyRootAction | MyRootAction[];
-type ReduxDispatch = (callback: ReduxDispatchCallback) => void;
+type ReduxDispatchParameter =
+  | MyRootAction
+  | MyRootAction[]
+  | ReduxDispatchCallback;
+type ReduxDispatch = (...actionsOrCallback: ReduxDispatchParameter[]) => void;
 
 // Define cy.reduxSelect
 type ReduxSelectSelector<T> = (state: MyRootState) => T;
@@ -156,14 +159,24 @@ type ReduxSelect = <T>(
   callback: ReduxSelectCallback<T>
 ) => void;
 
+// Define cy.reduxSelector
+type ReduxSelectPickSelector<T> = (
+  selectors: MySelectors
+) => ReduxSelectSelector<T>;
+type ReduxSelector = <T>(
+  pickSelector: ReduxSelectPickSelector<T>,
+  callback: ReduxSelectCallback<T>
+) => void;
+
 // Add them all to the Cypress chain
 declare global {
-  declare namespace Cypress {
+  namespace Cypress {
     interface Chainable<Subject> {
       redux: Redux;
       reduxVisit: ReduxVisit;
       reduxDispatch: ReduxDispatch;
       reduxSelect: ReduxSelect;
+      reduxSelector: ReduxSelector;
     }
   }
 }
@@ -206,26 +219,27 @@ cy.redux(store => {
     payload: 'something',
   });
 
-  const value = store.getState().foobar.value;
+  const value = store.getState().foo.value;
   expect(value).to.equal('something');
 });
 ```
 
-If you hooked up the action creators object, it's passed in as the second argument:
+If you hooked up the action creators and selectors, they're passed in as the next arguments:
 
 ```ts
-cy.redux((store, actions) => {
+cy.redux((store, actions, selectors) => {
   store.dispatch(actions.foo.setSomething('something'));
+  const value = selectors.foo.getSomething(store.getState());
 });
 ```
 
 With destructuring:
 
 ```ts
-cy.redux(({ getState, dispatch }, { foo }) => {
-  dispatch(foo.setSomething('something'));
+cy.redux(({ getState, dispatch }, { foo: actions }, { foo: selectors }) => {
+  dispatch(actions.setSomething('something'));
 
-  const { value } = getState().foobar;
+  const value = selectors.getSomething(getState());
   expect(value).to.equal('something');
 });
 ```
@@ -237,21 +251,63 @@ Wrapper around `cy.redux` for when you just want to select a value from the curr
 ```ts
 // Using a function
 cy.reduxSelect(
-  state => state.foobar,
+  state => state.foo.value,
   value => {
     expect(value).to.equal('something');
   }
 );
 
 // Using an already defined selector function
-cy.reduxSelect(selectFoobar, value => {
+cy.reduxSelect(getValue, value => {
   expect(value).to.equal('something');
 });
 ```
 
+### `cy.reduxSelector`
+
+Wrapper around `cy.reduxSelect` which, if you've provided it, gives you access to the selectors object so you can pick your selector from that.
+
+```ts
+cy.reduxSelector(
+  selectors => selectors.foo.getValue,
+  value => {
+    expect(value).to.equal('something');
+  }
+);
+```
+
+With destructuring:
+
+```ts
+cy.reduxSelector(
+  ({ foo }) => foo.getValue,
+  value => {
+    expect(value).to.equal('something');
+  }
+);
+```
+
 ### `cy.reduxDispatch`
 
-Wrapper around `cy.redux` for when you just want to dispatch an action or three, for example to set something up before or during test.
+Wrapper around `cy.redux` for when you just want to dispatch an action or three, for example to set something up before or during a test.
+
+```ts
+cy.reduxDispatch({ type: 'my-action' });
+
+cy.reduxDispatch(
+  { type: 'my-action' },
+  { type: 'my-other-action' },
+  { type: 'my-third-action' }
+);
+
+cy.reduxDispatch([
+  { type: 'my-action' },
+  { type: 'my-other-action' },
+  { type: 'my-third-action' },
+]);
+```
+
+You can also provide a callback for creating the actions:
 
 ```ts
 cy.reduxDispatch(() => ({ type: 'my-action' }));

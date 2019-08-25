@@ -1,9 +1,18 @@
 import { Store } from 'redux';
-import { STORE, ACTIONS, State, Action, ActionsCreators } from './common';
+import {
+  STORE,
+  ACTIONS,
+  State,
+  Selectors,
+  Action,
+  ActionsCreators,
+  SELECTORS,
+} from './common';
 
-type ReduxCallback = (
+export type ReduxCallback = (
   store: Store<State, Action>,
-  actionCreators: ActionsCreators
+  actionCreators: ActionsCreators,
+  selectors: Selectors
 ) => void;
 
 // TODO: Add option to turn off logging, like for `get`
@@ -16,7 +25,7 @@ export default (callback: ReduxCallback): void => {
 
   const window = (cy as any).state('window');
 
-  callback(window[STORE], window[ACTIONS]);
+  callback(window[STORE], window[ACTIONS], window[SELECTORS]);
 
   // TODO: Investigate possibility for snapshot logging before and after...
 };

@@ -1,15 +1,24 @@
 import redux from './redux';
 import { Action, ActionsCreators } from './common';
 
-type ReduxDispatchCallback = (
-  actionCreators: ActionsCreators
+export type ReduxDispatchCallback = (
+  actions: ActionsCreators
 ) => Action | Action[];
+export type ReduxDispatchParameter = Action | Action[] | ReduxDispatchCallback;
 
 // TODO: Add option to turn off logging, like for `get`
-export default (callback: ReduxDispatchCallback): void => {
+export default (...actionsOrCallback: ReduxDispatchParameter[]): void => {
   redux(({ dispatch }, actionCreators) => {
-    const actions = callback(actionCreators);
-    for (const action of Array.isArray(actions) ? actions : [actions]) {
+    const actions: Action[] = [];
+    for (let parameter of actionsOrCallback) {
+      if (typeof parameter === 'function')
+        parameter = parameter(actionCreators);
+      Array.isArray(parameter)
+        ? parameter.forEach(action => actions.push(action))
+        : actions.push(parameter);
+    }
+
+    for (const action of actions) {
       dispatch(action);
       Cypress.log({
         name: 'reduxDispatch',

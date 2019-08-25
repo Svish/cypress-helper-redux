@@ -1,6 +1,6 @@
 import { INITIAL_STATE, State } from './common';
 
-type ReduxVisitOptions = { initialState: State } & Partial<
+export type ReduxVisitOptions = { initialState: State } & Partial<
   Cypress.VisitOptions
 >;
 

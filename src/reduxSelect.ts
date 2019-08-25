@@ -1,8 +1,8 @@
 import redux from './redux';
 import { State } from './common';
 
-type ReduxSelectSelector<T> = (state: State) => T;
-type ReduxSelectCallback<T> = (value: T) => void;
+export type ReduxSelectSelector<T> = (state: State) => T;
+export type ReduxSelectCallback<T> = (value: T) => void;
 
 // TODO: Add option to turn off logging, like for `get`
 export default <T>(

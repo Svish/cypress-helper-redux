@@ -1,7 +1,5 @@
-import { select } from '../../src/components/Items/items.ducks';
-
 /**
- * NOTE: Just a sanity check of the app functionality, and not meant as a good
+ * Just a sanity check of the app functionality, and not meant as a good
  *   example of how  you should test your own apps. The redux manipulation is
  *   not needed here either, since there's no authentication or other
  *   complicated state setup to deal with in this small test app.

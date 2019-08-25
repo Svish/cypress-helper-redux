@@ -13,130 +13,6 @@
 - [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices.html#Organizing-Tests-Logging-In-Controlling-State)
 - [This presentation at YouTube](https://www.youtube.com/watch?v=5XQOK0v_YRE&t=1568)
 
-## Setup
-
-> _**Note:** For a complete example on hooking things up, with types and everything, have a look at the [sample app](app)._
-
-### 1. Install dependency
-
-```shell
-npm install --save-dev cypress-helper-redux
-```
-
-### 2. Include the custom commands
-
-```js
-// In e.g. cypress/support/index.ts
-include 'cypress-helper-redux';
-```
-
-### 3. Connect the helper with your store
-
-```ts
-// E.g. in src/store/index.ts
-
-// Get initial state (for using cy.reduxVisit)
-const initialState =
-  'Cypress' in window ? (window as any).__chr__initialState__ : undefined;
-
-// Create the store, as you normally would
-const store = createStore(rootReducer, initialState);
-export default store;
-
-// Connect with the Cypress helper
-if ('Cypress' in window) {
-  const w = window as any;
-  w.__chr__store__ = store;
-
-  // The following is optional
-  // See the sample app for an example of how this can be setup and used
-  w.__chr__actionCreators__ = actionCreators;
-  w.__chr__selectors__ = selectors;
-}
-```
-
-### 4. If you're using Typescript...
-
-Unfortunately I've not found a simple way to both extend the Cypress chain automatically _**and** allow you to specify/override the type of e.g. your Redux state_. So, the only stable solution I've currently found, is to just manually declare those types in your project. A little bit of a hassle, but luckily mostly copy-paste. And it also means typechecking and auto-complete should work great in your tests, which I quite important.
-
-These are the types used by the API that you need to set to something. If you don't care, or don't use some of them, you can of course use `any` or `undefined` as well.
-
-- `MyStore` – The type of your Redux store, i.e. the type of what `createStore` returns.
-- `MyRootState` – The shape of your root state.
-- `MyRootAction` – The type of an allowed action, i.e. `AnyAction` or a composite type of the defined actions in your application
-- `MyActionCreators` – The type of your action creator object (or set to `undefined` if you don't use it)
-- `MySelectors` – The type of your selectors object (or set to `undefined` if you don't use it)
-
-Create a new file, e.g. `cypress/support/cypress-helper-redux.d.ts`, paste in the following, and adjust if needed:
-
-```ts
-import {
-  Store as MyStore,
-  RootState as MyRootState,
-  RootAction as MyRootAction,
-  ActionCreators as MyActionCreators,
-  Selectors as MySelectors,
-} from '../../src/store';
-
-// NOTE: Leave the following untouched
-
-// Define cy.redux
-interface ReduxResponse {
-  store: MyStore;
-  actions: MyActionCreators;
-  selectors: MySelectors;
-}
-type Redux = () => Promise<ReduxResponse>;
-
-// Define cy.reduxVisit
-type ReduxVisitOptions = { initialState: Partial<MyRootState> } & Partial<
-  Cypress.VisitOptions
->;
-type ReduxVisit = (
-  url: string,
-  options: ReduxVisitOptions
-) => Cypress.Chainable<Window>;
-
-// Define cy.reduxDispatch
-type ReduxDispatchCallback = (
-  actions: MyActionCreators
-) => MyRootAction | MyRootAction[];
-type ReduxDispatchParameter =
-  | MyRootAction
-  | MyRootAction[]
-  | ReduxDispatchCallback;
-type ReduxDispatch = (
-  ...actionsOrCallback: ReduxDispatchParameter[]
-) => Promise<void>;
-
-// Define cy.reduxSelect
-type ReduxSelectSelector<T> = (state: MyRootState) => T;
-type ReduxSelect = <T>(selector: ReduxSelectSelector<T>) => Promise<T>;
-
-// Define cy.reduxSelector
-type ReduxSelectPickSelector<T> = (
-  selectors: MySelectors
-) => ReduxSelectSelector<T>;
-type ReduxSelector = <T>(
-  pickSelector: ReduxSelectPickSelector<T>
-) => Promise<T>;
-
-// Add them all to the Cypress chain
-declare global {
-  namespace Cypress {
-    interface Chainable<Subject> {
-      redux: Redux;
-      reduxVisit: ReduxVisit;
-      reduxDispatch: ReduxDispatch;
-      reduxSelect: ReduxSelect;
-      reduxSelector: ReduxSelector;
-    }
-  }
-}
-```
-
-> _**Please**, do let me know if you have any ideas of how to make this smoother. I'd really like it if a user only had to define those 5 dependent types, and the rest of the typings could be provided automatically by the package, but can't figure out how to do that. Seems I need generics on a module level, which does not exist, as far as I know..._ 😕
-
 ## Usage
 
 ### `cy.reduxVisit`
@@ -263,13 +139,141 @@ cy.reduxDispatch(actions => [
 ]);
 ```
 
+## Setup
+
+> _**Note:** For a complete example on hooking things up, with types and everything, have a look at the [sample app](app)._
+
+### 1. Install dependency
+
+```shell
+npm install --save-dev cypress-helper-redux
+```
+
+### 2. Include the custom commands
+
+```js
+// In e.g. cypress/support/index.ts
+include 'cypress-helper-redux';
+```
+
+### 3. Connect the helper with your store
+
+```ts
+// E.g. in src/store/index.ts
+
+// Get initial state (for using cy.reduxVisit)
+const initialState =
+  'Cypress' in window ? (window as any).__chr__initialState__ : undefined;
+
+// Create the store, as you normally would
+const store = createStore(rootReducer, initialState);
+export default store;
+
+// Connect with the Cypress helper
+if ('Cypress' in window) {
+  const w = window as any;
+  w.__chr__store__ = store;
+
+  // The following is optional
+  // See the sample app for an example of how this can be setup and used
+  w.__chr__actionCreators__ = actionCreators;
+  w.__chr__selectors__ = selectors;
+}
+```
+
+### 4. Typescript
+
+The Redux helper should know at least the first 2 of the following types, but preferably all of them if you want full IDE and typechecking joyfulness:
+
+- `MyStore` – The type of your Redux store, i.e. the type of what `createStore` returns  
+  Or `import { Store as MyStore } from redux` if you don't care
+- `MyRootState` – The shape of your root state  
+  Or `type MyRootState = any` if you don't care
+- `MyRootAction` – The type of an allowed action  
+  Or `type MyRootAction = AnyAction` if you don't care or have a type for that
+- `MyActionCreators` – The type of your action creator object  
+  Or `type MyActionCreators = any | undefined` if you don't care or don't use it
+- `MySelectors` – The type of your selectors object  
+  Or `type MySelectors = any | undefined` if you don't care or don't use it
+
+I haven't found a way to declare those types in an application and then "inject" them into `cypress-helper-redux` in a way that allows automatically adjusting the Cypress API correctly. So... as a work around, create a type-definition file in you Cypress directory, paste the following into it, and adjust the types mentioned above as needed:
+
+```ts
+// E.g in cypress/support/cypress-helper-redux.d.ts
+
+// Import and/or define the types mentioned above
+import {
+  Store as MyStore,
+  RootState as MyRootState,
+  RootAction as MyRootAction,
+  ActionCreators as MyActionCreators,
+  Selectors as MySelectors,
+} from '../../src/store';
+
+// NOTE: Leave the following untouched
+
+// Define cy.redux
+interface ReduxResponse {
+  store: MyStore;
+  actions: MyActionCreators;
+  selectors: MySelectors;
+}
+type Redux = () => Promise<ReduxResponse>;
+
+// Define cy.reduxVisit
+type ReduxVisitOptions = { initialState: Partial<MyRootState> } & Partial<
+  Cypress.VisitOptions
+>;
+type ReduxVisit = (
+  url: string,
+  options: ReduxVisitOptions
+) => Cypress.Chainable<Window>;
+
+// Define cy.reduxDispatch
+type ReduxDispatchCallback = (
+  actions: MyActionCreators
+) => MyRootAction | MyRootAction[];
+type ReduxDispatchParameter =
+  | MyRootAction
+  | MyRootAction[]
+  | ReduxDispatchCallback;
+type ReduxDispatch = (
+  ...actionsOrCallback: ReduxDispatchParameter[]
+) => Promise<void>;
+
+// Define cy.reduxSelect
+type ReduxSelectSelector<T> = (state: MyRootState) => T;
+type ReduxSelect = <T>(selector: ReduxSelectSelector<T>) => Promise<T>;
+
+// Define cy.reduxSelector
+type ReduxSelectPickSelector<T> = (
+  selectors: MySelectors
+) => ReduxSelectSelector<T>;
+type ReduxSelector = <T>(
+  pickSelector: ReduxSelectPickSelector<T>
+) => Promise<T>;
+
+// Add them all to the Cypress chain
+declare global {
+  namespace Cypress {
+    interface Chainable<Subject> {
+      redux: Redux;
+      reduxVisit: ReduxVisit;
+      reduxDispatch: ReduxDispatch;
+      reduxSelect: ReduxSelect;
+      reduxSelector: ReduxSelector;
+    }
+  }
+}
+```
+
 # TODO
 
 1. **Typesafe Cypress commands, without copy-pasting stuff**  
-   Really not sure how though... 😕
+   Really not sure how though... ideas are welcome... 😕
 
 2. **Snapshot logging**  
-   In Cypress there seems to be a way to do snapshot logging, which would be perfect to do before and after having dispatched any actions. However, I haven't yet been able to figure out exactly how one does that... please let me know if you have any pointers... 🤔
+   In Cypress there seems to be a way to do snapshot logging, which I think would be very good to do before and after dispatching Redux actions. But, I haven't yet been able to figure out exactly how one does that... so, please let me know if you have any pointers... 🤔
 
 3. **Helper functions to connect store with helper**  
    Should be simple in theory, but for some reason, everything seems to crash (getting `cy is not defined` in Cypress) the _instant_ I do _any_ import of helper code from the application code... Might be simple enough as it is though, and it might prevent any helper code ending up in application bundles, so... maybe better the way it is...? Advice and feedback welcome... 👍

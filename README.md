@@ -5,7 +5,7 @@
 > [Cypress](https://www.cypress.io/) [commands](https://docs.cypress.io/api/cypress-api/custom-commands.html) for manipulating a [Redux](https://redux.js.org/) store during testing. For example to:
 >
 > - Set up a predictable state before certain tests
-> - Dispatch actions to make state adjustmens during tests
+> - Dispatch actions to make state adjustmens before or during tests
 > - Validate state during or after tests have run
 
 ## Inspiration

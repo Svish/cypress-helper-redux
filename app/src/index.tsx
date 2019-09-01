@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 
-import Items from './components/Items';
+import App from './components/App';
 import './style.css';
 
 ReactDOM.render(
   <Provider store={store}>
-    <Items />
+    <App />
   </Provider>,
   document.getElementById('root')
 );
